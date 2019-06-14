@@ -1,0 +1,55 @@
+---
+# tasks file for weidongyan.presto
+    - name: unpack spark-2.1.0 package
+      unarchive:
+        src: files/spark-2.1.0-bin-hadoop2.7.tgz
+        dest: /home/hadoopuser
+        owner: "{{ HadoopUser }}"
+        group: "{{ HadoopUser }}"
+
+    - name: copy hive.properties to catalog
+      template:
+        src: templates/yarn-site.xml
+        dest: /home/{{ HadoopUser }}/hadoop-2.7.3/etc/hadoop/yarn-site.xml
+        owner: "{{ HadoopUser }}"
+        group: "{{ HadoopUser }}"
+        mode: '0644'
+        backup: yes
+
+    - name: copy spark-defaults.conf to etc
+      template:
+        src: templates/spark-defaults.conf
+        dest: /home/{{ HadoopUser }}/spark-2.1.0-bin-hadoop2.7/conf/spark-defaults.conf
+        owner: "{{ HadoopUser }}"
+        group: "{{ HadoopUser }}"
+        mode: '0644'
+
+    - name: create spark-env.sh
+      copy:
+        content: |
+          export HADOOP_CONF_DIR=/home/{{ HadoopUser }}/hadoop-2.7.3/etc/hadoop
+        dest: /home/{{ HadoopUser }}/spark-2.1.0-bin-hadoop2.7/conf/spark-env.sh
+        mode: '0755'
+
+    - name: create start script
+      copy:
+        content: |
+          /home/{{ HadoopUser }}/hadoop-2.7.3/sbin/stop-yarn.sh
+          /home/{{ HadoopUser }}/hadoop-2.7.3/sbin/start-yarn.sh
+          /home/{{ HadoopUser }}/hadoop-2.7.3/sbin/mr-jobhistory-daemon.sh start historyserver
+        dest: /home/{{ HadoopUser }}/start-spark1.sh
+        mode: '0755'
+
+    - name: create spark-init.sh
+      copy:
+        content: |
+          hadoop fs -mkdir -p /tmp/spark/events
+        dest: /home/{{ HadoopUser }}/spark-init.sh
+        mode: '0755'
+
+    - name: create spark-init.sh
+      copy:
+        content: |
+          /home/{{ HadoopUser }}/spark-2.1.0-bin-hadoop2.7/sbin/start-history-server.sh
+        dest: /home/{{ HadoopUser }}/start-spark2.sh
+        mode: '0755'

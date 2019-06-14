@@ -1,0 +1,6 @@
+.vagrant
+*.zip
+*.gz
+*.tar
+*.retry
+*.tgz

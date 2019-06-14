@@ -1,0 +1,9 @@
+---
+- name: set a specific dns server
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: set timezone to Asia/Shanghai
+      timezone:
+        name: Asia/Shanghai

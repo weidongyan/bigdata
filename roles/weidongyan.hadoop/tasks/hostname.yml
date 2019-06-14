@@ -1,0 +1,8 @@
+- name: Replace a localhost entry with our own
+  lineinfile:
+    path: /etc/hosts
+    regexp: "{{ ansible_hostname }}"
+    line: "{{ NN_IP }} {{ ansible_hostname }}"
+    owner: root
+    group: root
+    mode: '0644'

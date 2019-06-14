@@ -1,0 +1,73 @@
+---
+# tasks file for weidongyan.presto
+    - name: unpack zeekeeper package
+      unarchive:
+        src: apache-hive-2.1.1-bin.tar.gz
+        dest: /home/{{ HadoopUser }}
+        owner: "{{ HadoopUser }}"
+        group: "{{ HadoopUser }}"
+
+    - name: chown for hive dir
+      file:
+        path: /home/{{ HadoopUser }}/apache-hive-2.1.1-bin
+        owner: "{{ HadoopUser }}"
+        group: "{{ HadoopUser }}"
+        recurse: yes
+
+    - name: create hive-site.xml
+      template:
+        src: templates/hive-site.xml
+        dest: /home/{{ HadoopUser }}/apache-hive-2.1.1-bin/conf/hive-site.xml
+        owner: "{{ HadoopUser }}"
+        group: "{{ HadoopUser }}"
+        mode: '0644'
+
+    - name: create core-site.xml
+      template:
+        src: templates/core-site.xml
+        dest: /home/{{ HadoopUser }}/hadoop-2.7.3/etc/hadoop/core-site.xml
+        owner: "{{ HadoopUser }}"
+        group: "{{ HadoopUser }}"
+        mode: '0644'
+
+    - name: create bash_profile
+      template:
+        src: templates/bash_profile
+        dest: /home/{{ HadoopUser }}/.bash_profile
+        owner: "{{ HadoopUser }}"
+        group: "{{ HadoopUser }}"
+        mode: '0644'
+
+    - name: create initScheme script
+      copy:
+        content: |
+          schematool -dbType mysql -initSchema
+        dest: /home/{{ HadoopUser }}/apache-hive-2.1.1-bin/initScheme1.sh
+        mode: 0755
+
+
+    - name: create metastore script
+      copy:
+        content: |
+          nohup hive --service metastore >> /home/{{ HadoopUser }}/apache-hive-2.1.1-bin/metastore.log 2>&1 &
+        dest: /home/{{ HadoopUser }}/apache-hive-2.1.1-bin/metastore2.sh
+        mode: 0755
+
+    - name: create start hive server script
+      copy:
+        content: |
+          nohup hive --service hiveserver2 >> /home/{{ HadoopUser }}/apache-hive-2.1.1-bin/hiveserver.log 2>&1 &
+        dest: /home/{{ HadoopUser }}/apache-hive-2.1.1-bin/hiveserver2.sh
+        mode: 0755
+
+
+    - name: create beeline
+      copy:
+        content: |
+          !connect jdbc:hive2://hadoopnode:10000/default hadoopuser hadoopuser
+        dest: /home/hadoopuser/apache-hive-2.1.1-bin/beeline
+        mode: 0644
+
+    - import_tasks: mysql57.yml
+    - import_tasks: mysql57_create.yml
+                               

@@ -1,0 +1,29 @@
+    - name: unpack kafka package
+      unarchive:
+        src: files/kafka_2.10-0.10.1.1.tgz
+        dest: /home/{{ HadoopUser }}
+        owner: "{{ HadoopUser }}"
+
+    - name: create kafka zookeep start script
+      copy:
+        content: |
+          #!/bin/bash
+          bin/zookeeper-server-start.sh  config/zookeeper.properties &
+        dest: /home/{{ HadoopUser }}/kafka_2.10-0.10.1.1/kafka_zookeep_1.sh
+        mode: 0755
+
+    - name: create kafka zookeep start script
+      copy:
+        content: |
+          #!/bin/bash
+          bin/kafka-server-start.sh -daemon config/server.properties
+        dest: /home/{{ HadoopUser }}/kafka_2.10-0.10.1.1/kafka_Broker_2.sh
+        mode: 0755
+
+    - name: create server.properties
+      template:
+        src: templates/server.properties
+        dest: /home/{{ HadoopUser }}/kafka_2.10-0.10.1.1/config/server.properties
+        owner: "{{ HadoopUser }}"
+        group: "{{ HadoopUser }}"
+        mode: '0644'

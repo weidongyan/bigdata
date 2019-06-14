@@ -1,0 +1,5 @@
+---
+# tasks file for weidongyan.hadoop
+- import_tasks: java.yml
+- import_tasks: hadoop.yml
+- import_tasks: hostname.yml

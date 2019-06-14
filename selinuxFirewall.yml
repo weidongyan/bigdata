@@ -1,0 +1,20 @@
+---
+- name: speed setup selinux and firewall
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: disable Selinux
+      selinux:
+        state: disabled
+      ignore_errors: yes
+
+    - name: disable selinux runtime
+      command: setenforce 0
+      ignore_errors: yes
+
+    - name: disable firewall
+      service:
+        name: firewalld
+        enabled: no
+        state: stopped

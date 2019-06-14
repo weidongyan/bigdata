@@ -1,0 +1,50 @@
+---
+# tasks file for weidongyan.presto
+    - name: unpack hbase package
+      unarchive:
+        src: files/hbase-1.2.4-bin.tar.gz
+        dest: /home/hadoopuser
+        owner: "{{ HadoopUser }}"
+        group: "{{ HadoopUser }}"
+
+    - name: chown for hive dir
+      file:
+        path: /home/hadoopuser
+        owner: hadoopuser
+        group: hadoopuser
+        recurse: yes
+
+    - name: copy hbase-env.sh to catalog
+      template:
+        src: templates/hbase-env.sh
+        dest: /home/{{ HadoopUser }}/hbase-1.2.4/conf/hbase-env.sh
+        owner: "{{ HadoopUser }}"
+        group: "{{ HadoopUser }}"
+        mode: '0755'
+
+    - name: copy hbase-site.xml to catalog
+      template:
+        src: templates/hbase-site.xml
+        dest: /home/{{ HadoopUser }}/hbase-1.2.4/conf/hbase-site.xml
+        owner: "{{ HadoopUser }}"
+        group: "{{ HadoopUser }}"
+        mode: '0644'
+
+    - name: copy regionservers to catalog
+      template:
+        src: templates/regionservers
+        dest: /home/{{ HadoopUser }}/hbase-1.2.4/conf/regionservers
+        owner: "{{ HadoopUser }}"
+        group: "{{ HadoopUser }}"
+        mode: '0644'
+
+    
+
+    - name: create start script
+      copy:
+        content: |
+          /home/{{ HadoopUser }}/hadoop-2.7.3/sbin/start-dfs.sh
+          /home/{{ HadoopUser }}/hbase-1.2.4/bin/start-hbase.sh
+        dest: /home/{{ HadoopUser }}/start-hbase.sh
+        mode: '0755'
+

@@ -1,0 +1,68 @@
+---
+# tasks file for weidongyan.presto
+    - name: unpack zeekeeper package
+      unarchive:
+        src: files/presto-server-0.166.tar.gz
+        dest: /home/hadoopuser
+        owner: "{{ HadoopUser }}"
+        group: "{{ HadoopUser }}"
+
+    - name: creat config directory
+      file:
+        path: /home/{{ HadoopUser }}/presto-server-0.166/etc/catalog/
+        state: directory
+        mode: '0755'
+
+    - name: copy hive.properties to catalog
+      template:
+        src: templates/hive.properties
+        dest: /home/{{ HadoopUser }}/presto-server-0.166/etc/catalog/hive.properties
+        owner: "{{ HadoopUser }}"
+        group: "{{ HadoopUser }}"
+        mode: '0644'
+
+    - name: copy config.properties to etc
+      template:
+        src: templates/config.properties
+        dest: /home/{{ HadoopUser }}/presto-server-0.166/etc/config.properties
+        owner: "{{ HadoopUser }}"
+        group: "{{ HadoopUser }}"
+        mode: '0644'
+
+    - name: copy jvm.config to etc
+      template:
+        src: templates/jvm.config
+        dest: /home/{{ HadoopUser }}/presto-server-0.166/etc/jvm.config
+        owner: "{{ HadoopUser }}"
+        group: "{{ HadoopUser }}"
+        mode: '0644'
+    
+    - name: copy node.properties to catalog
+      template:
+        src: templates/node.properties
+        dest: /home/{{ HadoopUser }}/presto-server-0.166/etc/node.properties
+        owner: "{{ HadoopUser }}"
+        group: "{{ HadoopUser }}"
+        mode: '0644'
+
+    - name: create start script
+      copy:
+        content: |
+          /home/{{ HadoopUser }}/hadoop-2.7.3/sbin/start-dfs.sh
+          nohup hive --service metastore >> /home/{{ HadoopUser }}/apache-hive-2.1.1-bin/metastore.log 2>&1 &
+          /home/{{ HadoopUser }}/presto-server-0.166/bin/launcher start
+        dest: /home/{{ HadoopUser }}/start-presto.sh
+        mode: '0755'
+
+    - name: create presto
+      copy:
+        src: files/presto-cli-0.166-executable.jar
+        dest: /home/{{ HadoopUser }}/presto-server-0.166/bin/presto
+        mode: '0755'
+
+    - name: create presto client script
+      copy:
+        content: |
+          presto --server {{ NameNode }}:8081 --catalog hive --schema default
+        dest: /home/{{ HadoopUser }}/start-presto-client-hive.sh
+        mode: '0755'

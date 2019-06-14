@@ -1,0 +1,15 @@
+    - name: install mysql tools
+      yum:
+        name: MySQL-python
+        state: latest
+
+    - name: create mysql user
+      mysql_user:
+        login_user: root
+        login_password: Vagrant2019#
+        name: hive
+        host: '%'
+        password: Vagrant2019#
+        priv: '*.*:ALL,GRANT'
+        state: present
+

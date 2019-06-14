@@ -1,0 +1,26 @@
+# .bash_profile
+
+# Get the aliases and functions
+if [ -f ~/.bashrc ]; then
+	. ~/.bashrc
+fi
+
+# User specific environment and startup programs
+
+PATH=$PATH:$HOME/.local/bin:$HOME/bin
+
+export PATH
+export HIVE_HOME=/home/{{ HadoopUser }}/apache-hive-2.1.1-bin
+export PATH=$HIVE_HOME/bin:$PATH
+export JAVA_HOME=/var/lib/jdk1.8.0_111
+export PATH=$JAVA_HOME/bin:$PATH
+export HADOOP_HOME=/home/{{ HadoopUser }}/hadoop-2.7.3
+export HADOOP_INSTALL=$HADOOP_HOME
+export HADOOP_MAPRED_HOME=$HADOOP_HOME
+export HADOOP_COMMON_HOME=$HADOOP_HOME
+export HADOOP_HDFS_HOME=$HADOOP_HOME
+export YARN_HOME=$HADOOP_HOME
+export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
+export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
+export PRESTO_HOME=/home/{{ HadoopUser }}/presto-server-0.166
+export PATH=$PRESTO_HOME/bin:$PATH

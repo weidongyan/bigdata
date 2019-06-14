@@ -1,0 +1,5 @@
+---
+# defaults file for weidongyan.presto
+NameNode: hadoopnode
+DataNode: hadoopnode
+HadoopUser: hadoopuser

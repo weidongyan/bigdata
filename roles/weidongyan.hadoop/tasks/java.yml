@@ -1,0 +1,11 @@
+    - name: unpack java package
+      unarchive:
+        src: files/jdk-8u111-linux-x64.tar.gz
+        dest: /var/lib/
+
+    - name: add locale to profile
+      blockinfile:
+        path: /etc/profile
+        block: |
+          export JAVA_HOME=/var/lib/jdk1.8.0_111/
+          export PATH=$JAVA_HOME/bin:$PATH

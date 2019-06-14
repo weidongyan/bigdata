@@ -1,0 +1,25 @@
+---
+# tasks file for weidongyan.presto
+    - name: unpack hbase package
+      unarchive:
+        src: files/zookeeper-3.4.9.tar.gz
+        dest: /home/hadoopuser
+        owner: "{{ HadoopUser }}"
+        group: "{{ HadoopUser }}"
+
+    - name: copy zoo.cfg
+      template:
+        src: templates/zoo.cfg
+        dest: /home/{{ HadoopUser }}/zookeeper-3.4.9/conf/zoo.cfg
+        owner: "{{ HadoopUser }}"
+        group: "{{ HadoopUser }}"
+        mode: '0644'
+
+
+    - name: create start script
+      copy:
+        content: |
+          /home/{{ HadoopUser }}/zookeeper-3.4.9/bin/zkServer.sh start
+        dest: /home/{{ HadoopUser }}/start-zookeeper.sh
+        mode: '0755'
+

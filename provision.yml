@@ -1,0 +1,8 @@
+---
+- import_playbook: basicSoftwareInstall.yml
+- import_playbook: sshd.yml
+- import_playbook: locale.yml
+- import_playbook: timezone.yml
+- import_playbook: hadoop_install.yml
+- import_playbook: selinuxFirewall.yml
+

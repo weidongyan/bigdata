@@ -1,0 +1,99 @@
+    - name: create hadoop user
+      user:
+        name: "{{ HadoopUser }}"
+        groups: wheel
+        append: yes
+        generate_ssh_key: yes
+        ssh_key_bits: 2048
+        ssh_key_file: .ssh/id_rsa
+        
+    - name: Set authorized key taken from file
+      copy:
+        src: /home/{{ HadoopUser }}/.ssh/id_rsa.pub
+        dest: /home/{{ HadoopUser }}/.ssh/authorized_keys
+        remote_src: yes
+        owner: "{{ HadoopUser }}"
+        group: "{{ HadoopUser }}"
+        mode: 0600
+
+    - name: create hadoop install script
+      copy:
+        content: |
+          #!/bin/bash
+          source /home/{{ HadoopUser }}/.bash_profile
+          sudo -u {{ HadoopUser }} -E /home/{{ HadoopUser }}/hadoop-2.7.3/bin/hdfs namenode -format
+        dest: /home/{{ HadoopUser }}/hdfsformat.sh
+        mode: 0755
+
+
+    - name: setup sudo priviledge
+      copy:
+        content: "{{ HadoopUser }} ALL=(root) NOPASSWD:ALL"
+        dest: "/etc/sudoers.d/{{ HadoopUser }}"
+
+    - name: dir exists or not
+      stat:
+        path: /home/{{ HadoopUser }}/hadoop-2.7.3
+      register: hadoop_home
+
+    - name: unpack hadoop package
+      unarchive:
+        src: hadoop-2.7.3.tar.gz
+        dest: /home/{{ HadoopUser }}
+        owner: "{{ HadoopUser }}"
+        group: "{{ HadoopUser }}"
+      when: not hadoop_home.stat.exists
+
+    - name: chown for hive dir
+      file:
+        path: /home/{{ HadoopUser }}
+        owner: "{{ HadoopUser }}"
+        group: "{{ HadoopUser }}"
+        recurse: yes
+ 
+    - name: create core-site.xml
+      template:
+        src: templates/core-site.xml
+        dest: /home/{{ HadoopUser }}/hadoop-2.7.3/etc/hadoop/core-site.xml
+        owner: "{{ HadoopUser }}"
+        group: "{{ HadoopUser }}"
+        mode: '0644'
+   
+    - name: create core-site.xml
+      template:
+        src: templates/hdfs-site.xml
+        dest: /home/{{ HadoopUser }}/hadoop-2.7.3/etc/hadoop/hdfs-site.xml
+        owner: "{{ HadoopUser }}"
+        group: "{{ HadoopUser }}"
+        mode: '0644'
+
+    - name: create core-site.xml
+      template:
+        src: templates/mapred-site.xml
+        dest: /home/{{ HadoopUser }}/hadoop-2.7.3/etc/hadoop/mapred-site.xml
+        owner: "{{ HadoopUser }}"
+        group: "{{ HadoopUser }}"
+        mode: '0644'
+
+    - name: create bash_profile
+      template:
+        src: templates/bash_profile
+        dest: /home/{{ HadoopUser }}/.bash_profile
+        owner: "{{ HadoopUser }}"
+        group: "{{ HadoopUser }}"
+        mode: '0644'
+
+    - name: Fix Java_home error
+      lineinfile:
+        path: /home/{{ HadoopUser }}/hadoop-2.7.3/etc/hadoop/hadoop-env.sh
+        regexp: '^export JAVA_HOME'
+        line: 'export JAVA_HOME=/var/lib/jdk1.8.0_111'
+
+    - name: dir exists or not
+      stat:
+        path: /home/{{ HadoopUser }}/hadoop-2.7.3/tmp
+      register: hadoop_dir
+
+    - name: Format namenode
+      shell: /home/{{ HadoopUser }}/hdfsformat.sh
+      when: not hadoop_dir.stat.exists

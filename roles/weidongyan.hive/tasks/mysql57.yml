@@ -1,0 +1,41 @@
+    - name: setup mysql57 repo 
+      yum:
+        name: https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
+        state: present
+
+
+    - name: install mysql server
+      yum:
+        name: mysql-server
+        state: present
+
+    - name: install mysql connector
+      yum:
+        name: mysql-connector-java
+        state: present
+
+    - name: start mysql service
+      service:
+        name: mysqld
+        state: restarted
+        enabled: yes
+
+#    - name: get default password
+#      shell: grep 'temporary password' /var/log/mysqld.log
+#      register: mysql_pwd
+
+#    - name: display mysql password
+#      debug:
+#        var: mysql_pwd
+
+    - name: change mysql default password
+      shell: mysqladmin -uroot -p$(grep 'temporary password' /var/log/mysqld.log |awk -F ':\ ' '{print $2}'|sed 's/ //g') password "Vagrant2019#"
+      ignore_errors: yes
+
+    - name: create java-connector
+      file:
+        src: /usr/share/java/mysql-connector-java.jar
+        dest: /home/hadoopuser/apache-hive-2.1.1-bin/lib/mysql-connector-java.jar
+        owner: hadoopuser
+        group: hadoopuser
+        state: link
