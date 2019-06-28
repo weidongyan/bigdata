@@ -1,14 +1,14 @@
 ---
 - name: install hadoop zookeeper 
-  hosts: all
+  hosts: localhost
   become: yes
 
   roles:
     - {role: "weidongyan.hadoop", HadoopUser: "hadoopuser",}
-    - {role: "weidongyan.flume", HadoopUser: "hadoopuser",}
-    - {role: "weidongyan.zookeeper", HadoopUser: "hadoopuser",}
-    - {role: "weidongyan.hbase", HadoopUser: "hadoopuser", Master: "hadoopnode", Slave: "hadoopnode"}
-    - {role: "weidongyan.hive", HadoopUser: "hadoopuser",}
-    - {role: "weidongyan.kafka", HadoopUser: "hadoopuser",}
-    - {role: "weidongyan.presto", HadoopUser: "hadoopuser",}
-    - {role: "weidongyan.spark", HadoopUser: "hadoopuser",}
+  #  - {role: "weidongyan.flume", HadoopUser: "hadoopuser",}
+   # - {role: "weidongyan.zookeeper", HadoopUser: "hadoopuser",}
+  #  - {role: "weidongyan.hbase", HadoopUser: "hadoopuser", Master: "hadoopnode", Slave: "hadoopnode"}
+   # - {role: "weidongyan.hive", HadoopUser: "hadoopuser",}
+   # - {role: "weidongyan.kafka", HadoopUser: "hadoopuser",}
+   # - {role: "weidongyan.presto", HadoopUser: "hadoopuser",}
+   # - {role: "weidongyan.spark", HadoopUser: "hadoopuser",}

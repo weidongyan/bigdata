@@ -8,6 +8,11 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder ".", "/share"
 
   config.vm.provider "virtualbox" do |vb|
-     vb.memory = "4096"
+     vb.memory = "6144"
+	 vb.gui = true
+	  
+    vb.customize ["modifyvm", :id, "--clipboard",   "bidirectional"]
+    vb.customize ["modifyvm", :id, "--draganddrop", "bidirectional"]
+
   end
 end
