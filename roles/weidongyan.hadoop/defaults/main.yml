@@ -5,4 +5,4 @@ DataNode: hadoopnode
 HadoopUser: hadoopuser
 Master: master
 Slave: slave
-NN_IP: "{{ ansible_all_ipv4_addresses[0] }}"
+NN_IP: "{{ ansible_all_ipv4_addresses[1] }}"

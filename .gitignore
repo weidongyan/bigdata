@@ -4,3 +4,4 @@
 *.tar
 *.retry
 *.tgz
+.DS_Store
