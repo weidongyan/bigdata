@@ -44,6 +44,7 @@
       copy:
         content: |
           /home/{{ HadoopUser }}/hadoop-2.7.3/sbin/start-dfs.sh
+          /home/{{ HadoopUser }}/zookeeper-3.4.9/bin/zkServer.sh start
           /home/{{ HadoopUser }}/hbase-1.2.4/bin/start-hbase.sh
         dest: /home/{{ HadoopUser }}/start-hbase.sh
         mode: '0755'

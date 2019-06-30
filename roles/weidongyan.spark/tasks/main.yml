@@ -35,6 +35,7 @@
       copy:
         content: |
           /home/{{ HadoopUser }}/hadoop-2.7.3/sbin/stop-yarn.sh
+          /home/{{ HadoopUser }}/hadoop-2.7.3/sbin/start-dfs.sh
           /home/{{ HadoopUser }}/hadoop-2.7.3/sbin/start-yarn.sh
           /home/{{ HadoopUser }}/hadoop-2.7.3/sbin/mr-jobhistory-daemon.sh start historyserver
         dest: /home/{{ HadoopUser }}/start-spark1.sh

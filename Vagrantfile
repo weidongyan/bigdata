@@ -9,5 +9,9 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider "virtualbox" do |vb|
      vb.memory = "4096"
+     vb.gui = true
+     vb.cpus = 4
+     vb.customize ["modifyvm", :id, "--clipboard",   "bidirectional"]
+     vb.customize ["modifyvm", :id, "--draganddrop", "bidirectional"]
   end
 end
